@@ -1,0 +1,407 @@
+groups:
+- name: Pod and container status alert
+  rules:
+  - alert: High Pod Memory
+    expr: sum(container_memory_usage_bytes) > 1
+    for: 1m
+    labels:
+      severity: slack
+    annotations:
+      summary: High Memory Usage
+  - alert: Kube-proxy Cpu Usage Above 80%  
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-kube-proxy"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 80%"
+  - alert:  Kube-proxy Cpu Usage Above 90% 
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-kube-proxy"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 90%"  
+  - alert: Scheduler Cpu Usage Above 80%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-schedule"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 80%"
+  - alert: Scheduler Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-schedule"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 90%"
+  - alert: Controller-manager Cpu Usage Above 80% 
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-controller-manager"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 80%"
+  - alert: Controller-manager Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-controller-manager"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 90%"
+  - alert: Apiserver Cpu Usage Above 80%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-apiserver"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 80%"
+  - alert: Apiserver Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-apiserver"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 90%"
+  - alert: Etcd/Cpu Usage Above 80%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-etcd"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 80%"
+  - alert: Etcd/Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{job=~"kubernetes-etcd"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} module of cpu usage above 90%"
+  - alert: Kube-state-metrics/Cpu Usage Above 80%
+    expr: rate(process_cpu_seconds_total{k8s_app=~"kube-state-metrics"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.k8s_app}} module of cpu usage above 80%"
+      value: "{{ $value }}%"
+      threshold: "80%"      
+  - alert: Kube-state-metrics/Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{k8s_app=~"kube-state-metrics"}[1m]) * 100 > 0
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.k8s_app}} module of cpu usage above 90%"
+      value: "{{ $value }}%"
+      threshold: "90%"      
+  - alert: Coredns/Cpu Usage Above 80% 
+    expr: rate(process_cpu_seconds_total{k8s_app=~"kube-dns"}[1m]) * 100 > 80
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.k8s_app}} module of cpu usage above 80%"
+      value: "{{ $value }}%"
+      threshold: "80%"      
+  - alert: Coredns/Cpu Usage Above 90%
+    expr: rate(process_cpu_seconds_total{k8s_app=~"kube-dns"}[1m]) * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.k8s_app}} module of cpu usage above 90%"
+      value: "{{ $value }}%"
+      threshold: "90%"      
+  - alert: Kube-Proxy number of open fds above 600
+    expr: process_open_fds{job=~"kubernetes-kube-proxy"}  > 600
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: Kube-proxy number of open fds above1000
+    expr: process_open_fds{job=~"kubernetes-kube-proxy"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: Kubernetes-schedule number of open fds above 600
+    expr: process_open_fds{job=~"kubernetes-schedule"}  > 600
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: Kubernetes-schedule number of open fds above 1000
+    expr: process_open_fds{job=~"kubernetes-schedule"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: Kubernetes-controller-manager number of open fds above 600
+    expr: process_open_fds{job=~"kubernetes-controller-manager"}  > 600
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: Kubernetes-controller-manager number of open fds above1000
+    expr: process_open_fds{job=~"kubernetes-controller-manager"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: kubernetes-apiserver number of open fds above 600
+    expr: process_open_fds{job=~"kubernetes-apiserver"}  > 600
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: kubernetes-apiserver number of open fds above 1000
+    expr: process_open_fds{job=~"kubernetes-apiserver"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: kubernetes-etcd number of open fds above 600
+    expr: process_open_fds{job=~"kubernetes-etcd"}  > 600
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: kubernetes-etcd number of open fds above 1000
+    expr: process_open_fds{job=~"kubernetes-etcd"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "{{$labels.instance}}{{$labels.job}} number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: coredns number of open fds above 600
+    expr: process_open_fds{k8s_app=~"kube-dns"}  > 600
+    for: 2s
+    labels:
+      severity: warning 
+    annotations:
+      description: "plugin{{$labels.k8s_app}}({{$labels.instance}}): number of open fds above 600"
+      value: "{{ $value }}"
+  - alert: coredns number of open fds above 1000
+    expr: process_open_fds{k8s_app=~"kube-dns"}  > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      description: "plugin{{$labels.k8s_app}}({{$labels.instance}}): number of open fds above 1000"
+      value: "{{ $value }}"
+  - alert: kube-proxy virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{job=~"kubernetes-kube-proxy"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: scheduler virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{job=~"kubernetes-schedule"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: kubernetes-controller-manager virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{job=~"kubernetes-controller-manager"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: kubernetes-apiserver virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{job=~"kubernetes-apiserver"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: kubernetes-etcd virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{job=~"kubernetes-etcd"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: kube-dns virtual memory bytes above 2Gb
+    expr: process_virtual_memory_bytes{k8s_app=~"kube-dns"}  > 2000000000
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "plugin{{$labels.k8s_app}}({{$labels.instance}}): uses virtual memory above 2Gb"
+      value: "{{ $value }}"
+  - alert: HttpRequestsAvg TPS above 1000
+    expr: sum(rate(rest_client_requests_total{job=~"kubernetes-kube-proxy|kubernetes-kubelet|kubernetes-schedule|kubernetes-control-manager|kubernetes-apiservers"}[1m]))  > 1000
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): TPS above 1000"
+      value: "{{ $value }}"
+      threshold: "1000"   
+  - alert: Pod_restarts
+    expr: kube_pod_container_status_restarts_total{namespace=~"kube-system|default|monitor-sa"} > 0
+    for: 2s
+    labels:
+      severity: warning
+    annotations:
+      description: "at namespace{{$labels.namespace}}found{{$labels.pod}}of the container{{$labels.container}}had been restarted,this metrics is collected by{{$labels.instance}}/"
+      value: "{{ $value }}"
+      threshold: "0"
+  - alert: Pod_waiting
+    expr: kube_pod_container_status_waiting_reason{namespace=~"kube-system|default"} == 1
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "at namespace{{$labels.namespace}}({{$labels.instance}}): found beneath{{$labels.pod}}/{{$labels.container}}startup abnormal and waiting"
+      value: "{{ $value }}"
+      threshold: "1"   
+  - alert: Pod_terminated
+    expr: kube_pod_container_status_terminated_reason{namespace=~"kube-system|default|monitor-sa"} == 1
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "at namespace{{$labels.namespace}}({{$labels.instance}}): found beneath{{$labels.pod}}/{{$labels.container}}has been terminated"
+      value: "{{ $value }}"
+      threshold: "1"
+  - alert: Etcd_leader
+    expr: etcd_server_has_leader{job="kubernetes-etcd"} == 0
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): Currently no leader"
+      value: "{{ $value }}"
+      threshold: "0"
+  - alert: Etcd_leader_changes
+    expr: rate(etcd_server_leader_changes_seen_total{job="kubernetes-etcd"}[1m]) > 0
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): Currently the leader changes"
+      value: "{{ $value }}"
+      threshold: "0"
+  - alert: Etcd_failed
+    expr: rate(etcd_server_proposals_failed_total{job="kubernetes-etcd"}[1m]) > 0
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}}): Etcd failed"
+      value: "{{ $value }}"
+      threshold: "0"
+  - alert: Etcd_db_total_size
+    expr: etcd_debugging_mvcc_db_total_size_in_bytes{job="kubernetes-etcd"} > 10000000000
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "modules{{$labels.job}}({{$labels.instance}})： db size above 10Gb"
+      value: "{{ $value }}"
+      threshold: "10G"
+  - alert: Endpoint_ready
+    expr: kube_endpoint_address_not_ready{namespace=~"kube-system|default"} == 1
+    for: 2s
+    labels:
+      team: admin
+    annotations:
+      description: "at namespace{{$labels.namespace}}({{$labels.instance}}): found{{$labels.endpoint}}unavailable"
+      value: "{{ $value }}"
+      threshold: "1"
+- name: Physical node status alert
+  rules:
+  - alert: Physical node Cpu utilization
+    expr: 100-avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) by(instance)*100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.instance }}Excessive cpu utilization"
+      description: "{{ $labels.instance }}/cpu utilization above 90%,current utilization[{{ $value }}],need to investigate and handle with" 
+  - alert: Physical node memory utilization
+    expr: (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) / node_memory_MemTotal_bytes * 100 > 90
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.instance }}Excessive memory utilization"
+      description: "{{ $labels.instance }}/memory utilization above 90%,current utilization[{{ $value }}],need to investigate and handle with"
+  - alert: InstanceDown
+    expr: up == 0
+    for: 2s
+    labels:
+      severity: critical
+    annotations:   
+      summary: "{{ $labels.instance }}: Server down"
+      description: "{{ $labels.instance }}: Server delay exceeds 2 minutes"
+  - alert: Physical node disk/IO performance
+    expr: 100-(avg(irate(node_disk_io_time_seconds_total[1m])) by(instance)* 100) < 60
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.mountpoint}} Excessive inflow IO utilization"
+      description: "{{$labels.mountpoint }} inflow disk IO above 60%(Currentlyusing:{{$value}})"
+  - alert: Inbound traffic bandwidth
+    expr: ((sum(rate (node_network_receive_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[5m])) by (instance)) / 100) > 102400
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.mountpoint}} inbound traffic bandwidth too high！"
+      description: "{{$labels.mountpoint }} inbound traffic bandwidth keep higher than 100Mb for 5 minutes. RX bandwidth{{$value}}"
+  - alert: Outbound traffic bandwidth
+    expr: ((sum(rate (node_network_transmit_bytes_total{device!~'tap.*|veth.*|br.*|docker.*|virbr*|lo*'}[5m])) by (instance)) / 100) > 102400
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.mountpoint}} Outbound traffic bandwidth too high！"
+      description: "{{$labels.mountpoint }} outbound traffic bandwidth keep higher than 100Mb for 5 minutes. RX bandwidth{{$value}}"
+  - alert: TCP session
+    expr: node_netstat_Tcp_CurrEstab > 1000
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.mountpoint}} TCP_ESTABLISHED too high！"
+      description: "{{$labels.mountpoint }} TCP_ESTABLISHED above 100%(Currentlyusing:{{$value}}%)"
+  - alert: Disk space
+    expr: 100-(node_filesystem_free_bytes{fstype=~"ext4|xfs"}/node_filesystem_size_bytes {fstype=~"ext4|xfs"}*100) > 80
+    for: 2s
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.mountpoint}} disk partition utilization is too high！"
+      description: "{{$labels.mountpoint }} disk partition utilization above 80%(Currentlyusing:{{$value}}%)"
